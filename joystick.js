@@ -28,7 +28,10 @@ var JoyStick = function( attrs ) {
 	this.y = attrs.y || 0;
 	this.mouse_support = attrs.mouse_support||true;
 	
-	this.__create_fullscreen_div();
+	if ( (attrs.visible === null) || ( attrs.visible === true ) )
+	{
+		this.__create_fullscreen_div();
+	}
 };
 
 JoyStick.prototype.left = false;
@@ -196,9 +199,9 @@ var JoyStickButton = function( attrs )
 	div_style.top = this.y - this.radius + 'px';
 	div_style.left = this.x - this.radius + 'px';
 	div_style.borderRadius = '50%';
-	div_style.backgroundColor = 'rgba(200,200,200,0.3)';
+	div_style.backgroundColor = 'rgba(255,255,255,0.1)';
 	div_style.borderWidth = '1px';
-	div_style.borderColor = 'rgba(200,200,200,0.8)';
+	div_style.borderColor = 'rgba(255,255,255,0.8)';
 	div_style.borderStyle = 'solid';
 	JOYSTICK_DIV.appendChild( this.base );
 
@@ -209,6 +212,23 @@ var JoyStickButton = function( attrs )
 			this.bind( 'mousedown', attrs.func );
 		}
 		this.bind( 'touchstart', attrs.func );
+	}
+
+	var self = this;
+	function __over()
+	{
+		div_style.backgroundColor = 'rgba(255,255,255,0.3)';
+	}
+	function __leave()
+	{
+		div_style.backgroundColor = 'rgba(255,255,255,0.1)';
+	}
+	self.bind( 'touchstart', __over );
+	self.bind( 'touchend', __leave );
+	if ( this.mouse_support )
+	{
+		self.bind( 'mousedown', __over );
+		self.bind( 'mouseup', __leave );
 	}
 };
 JoyStickButton.prototype.bind = function( evt, func )
