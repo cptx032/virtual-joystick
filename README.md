@@ -3,6 +3,8 @@ A lightweight virtual HTML5/Javascript mobile joystick
 
 ![Virtual joystick](https://raw.githubusercontent.com/cptx032/virtual-joystick/master/examples/screenshot.png)
 
+See a running example here: http://vls2.tk/virtual-joystick/
+
 To create a virtual joystick is very simple:
 ```javascript
 // creates a centralized joystick
@@ -24,3 +26,7 @@ function check() {
 }
 check();
 ```
+
+### Limitations
+This project is just for very simple projects. It is not able to say the delta and configures the button's style, for example.
+If you want you can checkout https://github.com/jeromeetienne/virtualjoystick.js for a more complete solution
