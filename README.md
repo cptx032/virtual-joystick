@@ -29,4 +29,4 @@ check();
 
 ### Limitations
 This project is just for very simple projects. It is not able to say the delta and configures the button's style, for example.
-If you want you can checkout https://github.com/jeromeetienne/virtualjoystick.js for a more complete solution
+If you want you can checkout https://github.com/yoannmoinet/nipplejs for a more complete solution
