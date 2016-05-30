@@ -1,11 +1,33 @@
 // author: Willie Lawrence
 // contact: cptx032 arroba gmail dot com
 // based in https://github.com/jeromeetienne/virtualjoystick.js/blob/master/virtualjoystick.js
+var JOYSTICK_DIV = null;
 
+function __init_joystick_div()
+{
+	JOYSTICK_DIV = document.createElement('div');
+	var div_style = JOYSTICK_DIV.style;
+	div_style.background = 'rgba(255,255,255,0)';
+	div_style.position = 'absolute';
+	div_style.top = '0px';
+	div_style.bottom = '0px';
+	div_style.left = '0px';
+	div_style.right = '0px';
+	div_style.margin = '0px';
+	div_style.padding = '0px';
+	div_style.borderWidth = '0px';
+	div_style.position = 'absolute';
+	div_style.overflow = 'hidden';
+	div_style.zIndex = '10000';
+	document.body.appendChild( JOYSTICK_DIV );
+}
 var JoyStick = function( attrs ) {
 	this.radius = attrs.radius || 50;
 	this.x = attrs.x || 0;
 	this.y = attrs.y || 0;
+	this.mouse_support = attrs.mouse_support||true;
+	
+	this.__create_fullscreen_div();
 };
 
 JoyStick.prototype.left = false;
@@ -65,20 +87,13 @@ JoyStick.prototype.__is_right = function( dx, dy )
 	return true;	
 };
 
-JoyStick.prototype.create_over_canvas = function()
+JoyStick.prototype.__create_fullscreen_div = function()
 {
-	this.div = document.createElement('div');
-	var div_style = this.div.style;
-	div_style.width = '100%';
-	div_style.height = '100%';
-	div_style.background = 'rgba(255,255,255,0)';
-	div_style.position = 'absolute';
-	div_style.top = '0px';
-	div_style.margin = '0px';
-	div_style.padding = '0px';
-	div_style.position = 'absolute';
-	div_style.overflow = 'hidden';
-	document.body.appendChild( this.div );
+	if ( JOYSTICK_DIV === null )
+	{
+		__init_joystick_div();
+	}
+	this.div = JOYSTICK_DIV;
 	///////////////////////////////////////////
 	this.base = document.createElement('span');
 	div_style = this.base.style;
@@ -112,7 +127,11 @@ JoyStick.prototype.create_over_canvas = function()
 	// to captures fast movements
 	function touch_hander( evt )
 	{
-		var touch_obj = evt.changedTouches[0];
+		var touch_obj = evt.changedTouches ? evt.changedTouches[0] : evt;
+		if ( self.mouse_support && !(touch_obj.buttons === 1) )
+		{
+			return;
+		}
 		self.control.style.left = touch_obj.clientX - (self.radius/4) + 'px';
 		self.control.style.top = touch_obj.clientY - (self.radius/4) + 'px';
 
@@ -133,10 +152,65 @@ JoyStick.prototype.create_over_canvas = function()
 		self.control.style.top = self.y - (self.radius/4) + 'px';
 		self.control.style.left = self.x - (self.radius/4) + 'px';
 	}
-	this.base.addEventListener('touchmove', touch_hander, false);
-	this.base.addEventListener('touchstart', touch_hander, false);
-	this.base.addEventListener('touchend', clear_flags, false);
-	this.control.addEventListener('touchmove', touch_hander, false);
-	this.control.addEventListener('touchstart', touch_hander, false);
-	this.control.addEventListener('touchend', clear_flags, false);
+	this.bind( 'touchmove', touch_hander );
+	this.bind( 'touchstart', touch_hander );
+	this.bind( 'touchend', clear_flags );
+	if ( this.mouse_support )
+	{
+		this.bind( 'mousedown', touch_hander );
+		this.bind( 'mousemove', touch_hander );
+		this.bind( 'mouseup', clear_flags );
+	}
+};
+JoyStick.prototype.bind = function( evt, func )
+{
+	this.base.addEventListener( evt, func );
+	this.control.addEventListener( evt, func );
+};
+
+/*
+attributes:
+	+ x
+	+ y
+	+ func
+	+ mouse_support
+*/
+var JoyStickButton = function( attrs )
+{
+	this.radius = attrs.radius || 50;
+	this.x = attrs.x || 0;
+	this.y = attrs.y || 0;
+	this.text = attrs.text||'';
+	this.mouse_support = attrs.mouse_support||false;
+	if ( JOYSTICK_DIV === null )
+	{
+		__init_joystick_div();
+	}
+	this.base = document.createElement('span');
+	this.base.innerHTML = this.text;
+	div_style = this.base.style;
+	div_style.width = this.radius * 2 + 'px';
+	div_style.height = this.radius * 2 + 'px';
+	div_style.position = 'absolute';
+	div_style.top = this.y - this.radius + 'px';
+	div_style.left = this.x - this.radius + 'px';
+	div_style.borderRadius = '50%';
+	div_style.backgroundColor = 'rgba(200,200,200,0.3)';
+	div_style.borderWidth = '1px';
+	div_style.borderColor = 'rgba(200,200,200,0.8)';
+	div_style.borderStyle = 'solid';
+	JOYSTICK_DIV.appendChild( this.base );
+
+	if ( attrs.func )
+	{
+		if ( this.mouse_support )
+		{
+			this.bind( 'mousedown', attrs.func );
+		}
+		this.bind( 'touchstart', attrs.func );
+	}
+};
+JoyStickButton.prototype.bind = function( evt, func )
+{
+	this.base.addEventListener( evt, func );
 };
