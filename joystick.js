@@ -23,6 +23,7 @@ function __init_joystick_div()
 }
 var JoyStick = function( attrs ) {
 	this.radius = attrs.radius || 50;
+	this.inner_radius = attrs.inner_radius||this.radius/2;
 	this.x = attrs.x || 0;
 	this.y = attrs.y || 0;
 	this.mouse_support = attrs.mouse_support||true;
@@ -110,11 +111,11 @@ JoyStick.prototype.__create_fullscreen_div = function()
 	///////////////////////////////////////////
 	this.control = document.createElement('span');
 	div_style = this.control.style;
-	div_style.width = this.radius / 2 + 'px';
-	div_style.height = this.radius / 2 + 'px';
+	div_style.width = this.inner_radius * 2 + 'px';
+	div_style.height = this.inner_radius * 2 + 'px';
 	div_style.position = 'absolute';
-	div_style.top = this.y - (this.radius/4) + 'px';
-	div_style.left = this.x - (this.radius/4) + 'px';
+	div_style.top = this.y - this.inner_radius + 'px';
+	div_style.left = this.x - this.inner_radius + 'px';
 	div_style.borderRadius = '50%';
 	div_style.backgroundColor = 'rgba(200,200,200,0.3)';
 	div_style.borderWidth = '1px';
@@ -132,8 +133,8 @@ JoyStick.prototype.__create_fullscreen_div = function()
 		{
 			return;
 		}
-		self.control.style.left = touch_obj.clientX - (self.radius/4) + 'px';
-		self.control.style.top = touch_obj.clientY - (self.radius/4) + 'px';
+		self.control.style.left = touch_obj.clientX - self.inner_radius + 'px';
+		self.control.style.top = touch_obj.clientY - self.inner_radius + 'px';
 
 		var dx = touch_obj.clientX - self.x;
 		var dy = touch_obj.clientY - self.y;
@@ -149,8 +150,8 @@ JoyStick.prototype.__create_fullscreen_div = function()
 		self.up = false;
 		self.down = false;
 
-		self.control.style.top = self.y - (self.radius/4) + 'px';
-		self.control.style.left = self.x - (self.radius/4) + 'px';
+		self.control.style.top = self.y - self.inner_radius + 'px';
+		self.control.style.left = self.x - self.inner_radius + 'px';
 	}
 	this.bind( 'touchmove', touch_hander );
 	this.bind( 'touchstart', touch_hander );
