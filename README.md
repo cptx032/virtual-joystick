@@ -1,9 +1,9 @@
 # virtual-joystick
 A lightweight virtual HTML5/Javascript mobile joystick
 
-![Virtual joystick](https://raw.githubusercontent.com/cptx032/virtual-joystick/master/examples/screenshot.png)
+![Virtual joystick](https://raw.githubusercontent.com/cptx032/virtual-joystick/master/screenshots/screenshot.png)
 
-See a running example here: http://vls2.tk/virtual-joystick/
+See a running example here: https://cptx032.github.io/virtual-joystick/
 
 To create a virtual joystick is very simple:
 ```javascript

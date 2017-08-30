@@ -23,12 +23,17 @@ function __init_joystick_div()
 }
 var JoyStick = function( attrs ) {
 	this.radius = attrs.radius || 50;
-	this.inner_radius = attrs.inner_radius||this.radius/2;
+	this.inner_radius = attrs.inner_radius || this.radius / 2;
 	this.x = attrs.x || 0;
 	this.y = attrs.y || 0;
-	this.mouse_support = attrs.mouse_support||true;
-	
-	if ( (attrs.visible === null) || ( attrs.visible === true ) )
+	this.mouse_support = attrs.mouse_support || true;
+
+	if ( attrs.visible === undefined )
+	{
+		attrs.visible = true;
+	}
+
+	if ( attrs.visible )
 	{
 		this.__create_fullscreen_div();
 	}
